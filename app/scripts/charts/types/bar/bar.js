@@ -28,6 +28,15 @@ Charts.bar = function (data, options) {
             .style("fill", function(d) {
                 return d.color;
             });
+
+        bar.selectAll("text")
+            .data(function(d) { return d.values; })
+            .enter().append("text")
+            .attr("x", function(d) { return self.x(d.y0)+4; })
+            .attr("y", function (d, i) { return (i * 10) + 10; })
+            .attr("class", "label")
+            .style("text-anchor", "left")
+            .text(function(d, i) { if (d.value > 0) { return self.access(self.options.stack[i].label, d); } });
 	}
 
     self.create = function () {

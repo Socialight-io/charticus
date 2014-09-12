@@ -10,7 +10,7 @@ Charts.column = function (data, options) {
 
         self.y = d3.scale.linear()
             .rangeRound([self.height, 0])
-            .domain([d3.max(self.data, function(d) { return d.total; }), 0]);
+            .domain([0, d3.max(self.data, function(d) { return d.total; })]);
     }
 
 	self.draw = function () { 
@@ -20,26 +20,25 @@ Charts.column = function (data, options) {
             .enter().append("g")
             .attr("class", "g")
             .attr("transform", function(d, i) {
-                var yv = self.height - self.y(d.total);
-                return "translate(" + self.x(self.access(self.options.axis.x.label, d)) + ", "+yv+")";
+                return "translate(" + self.x(self.access(self.options.axis.x.label, d)) + ", 0)";
             });
 
         bar.selectAll("rect")
             .data(function(d) { return d.values; })
             .enter().append("rect")
             .attr("width", self.x.rangeBand())
-            .attr("y", function(d) { return self.y(d.y0); })
-            .attr("height", function(d) { return self.y(d.y1) - self.y(d.y0); })
+            .attr("y", function(d) { return self.y(d.y1); })
+            .attr("height", function(d) { return Math.abs(self.y(d.y1) - self.y(d.y0)); })
             .style("fill", function(d) { return d.color; })
 
         bar.selectAll("text")
             .data(function(d) { return d.values; })
             .enter().append("text")
-            .attr("y", function(d) { return self.y(d.y0)+14; })
+            .attr("y", function(d) { return self.y(d.y1); })
             .attr("x", 6)
             .attr("class", "label")
             .style("text-anchor", "left")
-            .text(function(d, i) { console.log(d); return self.access(self.options.stack[i].label, d); });
+            .text(function(d, i) { return self.access(self.options.stack[i].label, d); });
 
 	}
 

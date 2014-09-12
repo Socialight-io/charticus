@@ -17,7 +17,25 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
             limit: 10
         }
     }).success(function(response) {
-		new Charts.bar(response, { dom: "#bar" });
+		new Charts.bar(response, { 
+			dom: "#bar",
+	        stack: [{
+	            key: "count",
+	            label: function (d) { return d.value + " Posts"; },
+	            color: "#006699",
+	            legend: "Posts"
+	        }, {
+	            key: "likes",
+	            label: function (d) { return d.value + " Likes"; },
+	            color: "#996600",
+	            legend: "Comments"
+	        }, {
+	            key: "comments",
+	            label: function (d) { return d.value + " Comments"; },
+	            color: "#FF0099",
+	           	legend: "Likes"
+	        }],
+		});
 		var column = new Charts.column(response, { 
 			dom: "#column", 
 	        stack: [{
