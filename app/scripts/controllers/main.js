@@ -17,6 +17,32 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
             limit: 10
         }
     }).success(function(response) {
+
+
+    	// Line Chart Demo
+		new Charts.line(response, { 
+			dom: "#line",
+	        stack: [{
+	            key: "count",
+	            label: function (d) { return d.value + " Posts"; },
+	            color: "#006699",
+	            legend: "Posts"
+	        }, {
+	            key: "likes",
+	            label: function (d) { return d.value + " Likes"; },
+	            color: "#996600",
+	            legend: "Comments"
+	        }, {
+	            key: "comments",
+	            label: function (d) { return d.value + " Comments"; },
+	            color: "#FF0099",
+	           	legend: "Likes"
+	        }],
+		});
+
+
+
+    	// Bar Chart Demo
 		new Charts.bar(response, { 
 			dom: "#bar",
 	        stack: [{
@@ -36,7 +62,10 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 	           	legend: "Likes"
 	        }],
 		});
-		var column = new Charts.column(response, { 
+
+
+		// Column Charts Demo
+		new Charts.column(response, { 
 			dom: "#column", 
 	        stack: [{
 	            key: "count",
@@ -56,6 +85,8 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 	        }],
 		});
 
+
+		// Pie Chart Demo with custom Colors
 		response = response.map(function (d) { 
 			d.color = '#'+Math.floor(Math.random()*16777215).toString(16);
 			return d;
@@ -67,7 +98,7 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 			innerRadius: .3,
 			stack: [
 				{
-					label: function (d) { console.log(d); return d.data.label._id.created.year+": "+d.data.total + " Posts"; },
+					label: function (d) { return d.data.label._id.created.year+": "+d.data.total + " Posts"; },
 	            	key: function (d) { return d.label ? d.label.count : d.count; },
 	            	color: function (d) { return d.data.color; }
 				}
