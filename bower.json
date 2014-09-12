@@ -1,6 +1,7 @@
 {
   "name": "charticus",
   "version": "0.0.2",
+  "main": "dist/scripts/charts.js",
   "dependencies": {
     "angular": "~1.2.0",
     "json3": "~3.3.1",
