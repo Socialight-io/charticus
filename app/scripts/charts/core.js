@@ -160,6 +160,7 @@ var Charts = new function () {
 			// Grab the dom object or fail
 			if (self.options.dom) { 
 				self.element = $(self.options.dom);
+				self.element.children("svg").remove();
 			} else { return false; }
 
 			// Calculate the width and height of the chart
