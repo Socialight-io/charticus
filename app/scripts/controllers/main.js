@@ -22,24 +22,38 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
     	// Line Chart Demo
 		new Charts.line(response, { 
 			dom: "#line",
+			timeseries: false,
 	        stack: [{
 	            key: "count",
-	            label: function (d) { return d.value + " Posts"; },
+	            label: function (d) { return d.count + " Posts"; },
 	            color: "#006699",
 	            legend: "Posts"
 	        }, {
 	            key: "likes",
-	            label: function (d) { return d.value + " Likes"; },
+	            label: function (d) { return d.likes + " Likes"; },
 	            color: "#996600",
 	            legend: "Comments"
 	        }, {
 	            key: "comments",
-	            label: function (d) { return d.value + " Comments"; },
+	            label: function (d) { return d.comments + " Comments"; },
 	            color: "#FF0099",
 	           	legend: "Likes"
 	        }],
+	        sort: function (d, e) { 
+	        	return String(d.label.date.substr(0, 4)) > String(e.label.date.substr(0, 4)); 
+	        },
+	        axis: {
+	            x: {
+	                show: true,
+	                label: function (d) {
+	                	return String(d.label.date.substr(0, 4)); 
+	               	}
+	            },
+	            y: { 
+	            	show: true
+	            }
+	        },
 		});
-
 
 
     	// Bar Chart Demo
@@ -86,11 +100,14 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		});
 
 
+
 		// Pie Chart Demo with custom Colors
 		response = response.map(function (d) { 
 			d.color = '#'+Math.floor(Math.random()*16777215).toString(16);
 			return d;
 		});
+
+
 
 		new Charts.pie(response, { 
 			dom: "#pie",
@@ -112,4 +129,51 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		});
     });
 
+
+
+    $http.get("http://api.socialight.io/posts?date_sd&created_g", {
+        params: {
+            token: "gUkmID0zQkXNTwvz7qLdb2BX7H4e5eGf",
+            uid: "70",
+  			created_gt: new Date((new Date()).getTime() - 30*24*60*60*1000),
+  			created_lt: new Date()
+        }
+    }).success(function(response) {
+    	// Line Chart Demo
+		new Charts.line(response, { 
+			dom: "#timeline",
+			timeseries: true,
+			interpolate: "line",
+			sort: function (d, e) { 
+				return new Date(d.label.date.substr(0, 10)) - new Date(e.label.date.substr(0, 10));
+			},
+	        stack: [{
+	            key: "count",
+	            label: function (d) { return d.count + " Posts"; },
+	            color: "#006699",
+	            legend: "Posts"
+	        }, {
+	            key: "likes",
+	            label: function (d) { return d.likes + " Likes"; },
+	            color: "#996600",
+	            legend: "Comments"
+	        }, {
+	            key: "comments",
+	            label: function (d) { return d.comments + " Comments"; },
+	            color: "#FF0099",
+	           	legend: "Likes"
+	        }],
+	        axis: {
+	            x: {
+	                show: true,
+	                label: function (d) { 
+	                	return new Date(d.label.date.substr(0, 10)); 
+	               	}
+	            },
+	            y: { 
+	            	show: true
+	            }
+	        },
+		});
+	});
 }]);
