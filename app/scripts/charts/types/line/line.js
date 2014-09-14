@@ -9,9 +9,14 @@ Charts.line = function (data, options) {
 
         if (self.options.timeseries == true) { 
             self.x = d3.time.scale().range([0, self.width]);
-            var extent = d3.extent(data, function(d) {
-               return self.access(self.options.axis.x.label, d);
-            });
+
+            if (self.options.axis.x.extent) { 
+                var extent = self.options.axis.x.extent;
+            } else {
+                var extent = d3.extent(data, function(d) {
+                   return self.access(self.options.axis.x.label, d);
+                });
+            }
 
             self.x.domain(extent);
 

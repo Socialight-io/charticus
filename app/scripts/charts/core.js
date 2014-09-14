@@ -228,14 +228,11 @@ var Charts = new function () {
 	        axis: {
 	            x: {
 	                show: true,
-	                label: function (d) { return String(d.label._id.created.year); }
 	            },
 	            y: {
 	                show: true,
-	                label: function (d) { return String(d.label._id.created.year); }
 	            }
 	        },
-	        sort: function (d, e) { return e.label._id.created.year - d.label._id.created.year; },
 	        limit: false
 		};
 

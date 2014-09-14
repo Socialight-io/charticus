@@ -21,9 +21,11 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 	            limit: r
 	        }
 	    }).success(function(response) {
-	    	new Charts.line(response, { 
+
+	    	var line = new Charts.line(response, { 
 				dom: "#line",
 				timeseries: false,
+				legend: false,
 		        stack: [{
 		            key: "count",
 		            label: function (d) { return d.count + " Posts"; },
@@ -51,7 +53,7 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		               	}
 		            },
 		            y: { 
-		            	show: true
+		            	show: false
 		            }
 		        },
 			});
