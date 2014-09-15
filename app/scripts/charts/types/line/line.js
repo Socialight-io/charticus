@@ -82,7 +82,6 @@ Charts.line = function (data, options) {
                     .text(function(d, i) { return self.access(stack.label, d.label); });
 
                 markers.push(marker[0]);
-                console.log(markers);
             });
         }
 	}

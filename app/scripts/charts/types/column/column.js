@@ -3,6 +3,8 @@ Charts.column = function (data, options) {
 	// Gets the basics out of the way
 	var self = new Charts.base(data, options);
 
+
+
     self.coords = function () { 
         self.x = d3.scale.ordinal()
             .rangeRoundBands([0, self.width], .1)
@@ -12,6 +14,8 @@ Charts.column = function (data, options) {
             .rangeRound([self.height, 0])
             .domain([0, d3.max(self.data, function(d) { return d.total; })]);
     }
+
+
 
 	self.draw = function () { 
 
@@ -43,6 +47,7 @@ Charts.column = function (data, options) {
 	}
 
 
+
     self.create = function () {
 
         self.setup();
@@ -57,6 +62,8 @@ Charts.column = function (data, options) {
     if (self.options.create == true) { 
         self.create();  
     }
+
+
 
     return self;
 };
