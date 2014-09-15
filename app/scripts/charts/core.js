@@ -24,47 +24,9 @@ var Charts = new function () {
 			}
 		}
 
-		self.process = function (data) { 
-	        
-	        self.data.forEach(function(d, i) {
-
-	        	var y0 = 0;
-	        	if (!self.data[i].label) { 
-
-		            self.data[i] = {
-		                label: d
-		            };
-
-		            if (self.options.stack) {
-
-		                self.options.stack.forEach(function(v) {
-
-		                    self.data[i].values = self.data[i].values || [];
-
-		                    var value = { label: v.label, color: v.color, value: self.access(v.key, d), data: d };
-		                    
-		                    value.y0 = y0;
-		                    value.y1 = y0 += self.access(v.key, d);
-
-		                    self.data[i].values.push(value);
-		                });
-
-		            } else { 
-		            	console.log("No stack specified");
-		            	return false;
-		            }
-
-		            if (self.data[i].values && self.data[i].values.length) {
-		                self.data[i].total = self.data[i].values[self.data[i].values.length - 1].y1;
-		            } else {
-		                self.data[i].total = 0;
-		            }
-	        	}
-
-	        });
-
 	        // Allow for advanced sorting using accessors
 
+	    self.sort = function () { 
 	        if (self.options.sort && typeof(self.options.sort) == "function") {
 	            self.data = self.data.sort(self.options.sort);
 	        } else if (self.options.sort) {
@@ -76,6 +38,9 @@ var Charts = new function () {
 	                }
 	            });
 	        }
+	    }
+
+	    self.offset = function () {
 
 	        // Allow offsets and limits
 	        
@@ -110,7 +75,7 @@ var Charts = new function () {
 	                .attr("width", 18)
 	                .attr("height", 18)
 	                .style("fill", function(d) {
-	                    return d.color;
+	                    return self.access(d.color, d);
 	                });
 
 	            legend.append("text")
@@ -155,7 +120,7 @@ var Charts = new function () {
 		}
 
 		// Init
-		self.setup = function () {
+		self.setup = function (resize) {
 
 			// Grab the dom object or fail
 			if (self.options.dom) { 
@@ -164,7 +129,7 @@ var Charts = new function () {
 			} else { return false; }
 
 			// Calculate the width and height of the chart
-			if (self.options.width) {
+			if (self.options.width && !resize) {
 				self.width = self.options.width - (self.options.margin.left + self.options.margin.right);
 			} else {
 				self.options.width = self.element.width();
@@ -178,53 +143,70 @@ var Charts = new function () {
 				self.height = self.element.height() - (self.options.margin.left + self.options.margin.right);
 			}
 
-			self.element.css({
-				width: self.options.width,
-				height: self.options.height
-			});
-
 			self.element = d3.selectAll(self.options.dom);
 
 	        self.svg = self.element.append("svg")
 	            .attr("width", self.width + self.options.margin.left + self.options.margin.right)
 	            .attr("height", self.height + self.options.margin.top + self.options.margin.bottom)
 	            .append("g")
-	            .attr("class", "holder")
+	            .attr("class", "chart")
 	            .attr("transform", "translate(" + self.options.margin.left + "," + self.options.margin.top + ")");
+
+
+	        self.sort();
+	        self.offset();
+
+	        self.coords();
+	        self.axis();
+	        self.legend();
 
 			return self.element;
 		}
 
-		self.update = function () { }
-		self.resize = function () { }
+		self.events = function () { 
+			self.options.stack.forEach(function (stack, i) { 
+				if (stack.click) { 
+					self.svg.selectAll(".stack-"+i).on("click", stack.click);
+				}
+				if (stack.mouseover) { 
+					self.svg.selectAll(".stack-"+i).on("mouseenter", stack.mouseover);
+				}
+				if (stack.mouseout) { 
+					self.svg.selectAll(".stack-"+i).on("mouseleave", stack.mouseout);
+				}
+			});
+		}
+
+	    self.update = function (data) { 
+	        self.data = data;
+	        self.draw();
+	    }
+
+	    self.resize = function () { 
+	        self.setup(true);
+	        self.draw();
+	    }
+
+	    self.create = function () {
+	        self.setup();
+	        self.draw();
+	        self.events();
+	    }
 
 		self.defaults = {
-			dom: "#options",
-			create: true, // If this option is true, the chart is created on init
-	        height: 400,
+			create: false,
+	        height: false,
 	        width: false,
 	        margin: {
 	            top: 20,
 	            right: 20,
 	            bottom: 20,
-	            left: 40
+	            left: 20
 	        },
-	        label: function (d) { return d.label; },
-	        stack: [{
-	            key: "count",
-	            label: "Count",
-	            color: "#006699"
-	        }, {
-	            key: "likes",
-	            label: "Comments",
-	            color: "#996600"
-	        }, {
-	            key: "comments",
-	            label: "Likes",
-	            color: "#FF0099"
-	        }],
+	        label: "",
+	        stack: [],
 	        legend: true,
-	        chartLabel: false,
+	        chartLabel: true,
 	        axis: {
 	            x: {
 	                show: true,
@@ -237,7 +219,7 @@ var Charts = new function () {
 		};
 
 		// Options
-		self.options = _.extend(self.defaults, options);
+		self.options = _.extend(self.defaults, options || {});
 
 		return self;
 	}

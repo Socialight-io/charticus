@@ -1,9 +1,14 @@
 Charts.line = function (data, options) { 
 
 	// Gets the basics out of the way
+
+    options = _.extend(self.defaults, { 
+        // Chart Defaults
+    }, options || {});
+
 	var self = new Charts.base(data, options);
 
-
+    // Declare Draw Function
 
     self.coords = function () { 
 
@@ -89,7 +94,6 @@ Charts.line = function (data, options) {
 
 
     self.create = function () {
-
         self.setup();
         self.process();
 
@@ -101,5 +105,9 @@ Charts.line = function (data, options) {
 
 
 
-    self.create();
+    if (self.options.create == true) { 
+        self.create();  
+    }
+
+    return self;
 };

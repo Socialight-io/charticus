@@ -1,7 +1,14 @@
 Charts.pie = function (data, options) { 
 
 	// Gets the basics out of the way
+
+    options = _.extend(self.defaults, { 
+        // Chart Defaults
+    }, options || {});
+
 	var self = new Charts.base(data, options);
+
+    // Declare Draw Function
 
 	self.draw = function () { 
         var radius = Math.min(self.width, self.height) / 2;
