@@ -1,0 +1,43 @@
+.chart { 
+	
+	.domain { 
+		fill: transparent;
+		stroke: black;
+		stroke-width: 1px;
+	}
+	.segment { 
+		.label { 
+			display: none;
+			padding: 10px;
+			border-radius: 2px;
+			box-shadow: 0 1px 3px rgba(0,0,0,.3);
+			z-index: 1000;
+
+			.label-background { 
+				z-index: 1000;
+			}
+
+			.label-text { 
+				z-index: 1001;
+			}
+
+		}
+	}
+
+	.segment:hover { 
+		.label { 
+			display: block;
+		}
+	}
+}
+
+.greyed-out { 
+	fill: #CCC !important;
+}
+
+.label-hover { 
+	position: absolute;
+	padding: 20px;
+	background: white;
+	box-shadow: 0 1px 3px rgba(0,0,0,.2);
+}
