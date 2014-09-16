@@ -1,6 +1,6 @@
 {
   "name": "charticus",
-  "version": "0.0.4",
+  "version": "0.1.1",
   "main": ["dist/scripts/charts.js","dist/styles/charts.css"],
   "dependencies": {
     "angular": "~1.2.0",
