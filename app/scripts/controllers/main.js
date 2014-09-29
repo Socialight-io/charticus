@@ -16,11 +16,10 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 
     $scope.load = function (r) {
 
-	    $http.get("http://api.socialight.io/posts?created_year_g", {
+	    $http.get("http://api.socialight.io/posts?created_day_g&date_sd&limit=100", {
 	        params: {
 	            token: "gUkmID0zQkXNTwvz7qLdb2BX7H4e5eGf",
-	            uid: "92",
-	            limit: r
+	            uid: "92"
 	        }
 	    }).success(function(response) {
 
@@ -30,6 +29,7 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 				timeseries: true,
 				legend: true,
 				height: 400,
+				interpolate: "linear",
 		        stack: [{
 		            key: "count",
 		            label: function (d) { return d.count + " Posts"; },
@@ -50,14 +50,14 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		            x: {
 		                show: true,
 		                label: function (d) {
-		                	return new Date(d._id.created.year+"-12-31"); 
+		                	return new Date(d.date.substr(0,10)); 
 		               	}
 		            },
 		            y: { 
 		            	show: false
 		            }
 		        },
-		        sort: function (d, e) { return d._id.created.year - e._id.created.year;}
+		        sort: function (d, e) { return new Date(d.date.substr(0,10)) - new Date(e.date.substr(0,10)); }
 			});
 
 

@@ -76,14 +76,14 @@ Charts.line = function (data, options) {
                   .style('fill', '#666')
                   .style('pointer-events', 'none')
 
-                var label = g.selectAll('text')
-                  .data(self.data)
-                  .enter().append("text")
-                    .attr("x", function (d) { return self.x(self.access(self.options.axis.x.label, d)); })
-                    .attr("y", function (d) { return self.y(self.access(stack.key, d)); })
-                    .attr("class", "label")
-                    .style("text-anchor", "left")
-                    .text(function(d, i) { return self.access(stack.label, d); });
+                // var label = g.selectAll('text')
+                //   .data(self.data)
+                //   .enter().append("text")
+                //     .attr("x", function (d) { return self.x(self.access(self.options.axis.x.label, d)); })
+                //     .attr("y", function (d) { return self.y(self.access(stack.key, d)); })
+                //     .attr("class", "label")
+                //     .style("text-anchor", "left")
+                //     .text(function(d, i) { return self.access(stack.label, d); });
 
                 markers.push(marker[0]);
             });
