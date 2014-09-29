@@ -19,49 +19,46 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 	    $http.get("http://api.socialight.io/posts?created_year_g", {
 	        params: {
 	            token: "gUkmID0zQkXNTwvz7qLdb2BX7H4e5eGf",
-	            uid: "70",
+	            uid: "92",
 	            limit: r
 	        }
 	    }).success(function(response) {
 
-	  //   	var line = new Charts.line(response, { 
-			// 	dom: "#line",
-			// 	create: true,
-			// 	timeseries: false,
-			// 	legend: false,
-			// 	height: 400,
-		 //        stack: [{
-		 //            key: "count",
-		 //            label: function (d) { return d.count + " Posts"; },
-		 //            color: "#006699",
-		 //            legend: "Posts"
-		 //        }, {
-		 //            key: "likes",
-		 //            label: function (d) { return d.likes + " Likes"; },
-		 //            color: "#996600",
-		 //            legend: "Comments"
-		 //        }, {
-		 //            key: "comments",
-		 //            label: function (d) { return d.comments + " Comments"; },
-		 //            color: "#FF0099",
-		 //           	legend: "Likes"
-		 //        }],
-		 //        sort: function (d, e) { 
-		 //        	console.log(d);
-		 //        	return String(d.label.date.substr(0, 4)) > String(e.label.date.substr(0, 4)); 
-		 //        },
-		 //        axis: {
-		 //            x: {
-		 //                show: true,
-		 //                label: function (d) {
-		 //                	return String(d.label.date.substr(0, 4)); 
-		 //               	}
-		 //            },
-		 //            y: { 
-		 //            	show: false
-		 //            }
-		 //        },
-			// });
+	    	var line = new Charts.line(response, { 
+				dom: "#line",
+				create: true,
+				timeseries: true,
+				legend: true,
+				height: 400,
+		        stack: [{
+		            key: "count",
+		            label: function (d) { return d.count + " Posts"; },
+		            color: "#006699",
+		            legend: "Posts"
+		        }, {
+		            key: "likes",
+		            label: function (d) { return d.likes + " Likes"; },
+		            color: "#996600",
+		            legend: "Comments"
+		        }, {
+		            key: "comments",
+		            label: function (d) { return d.comments + " Comments"; },
+		            color: "#FF0099",
+		           	legend: "Likes"
+		        }],
+		        axis: {
+		            x: {
+		                show: true,
+		                label: function (d) {
+		                	return new Date(d._id.created.year+"-12-31"); 
+		               	}
+		            },
+		            y: { 
+		            	show: false
+		            }
+		        },
+		        sort: function (d, e) { return d._id.created.year - e._id.created.year;}
+			});
 
 
 	    	// Bar Chart Demo

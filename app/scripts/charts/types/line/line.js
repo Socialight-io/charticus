@@ -2,11 +2,9 @@ Charts.line = function (data, options) {
 
 	// Gets the basics out of the way
 
-    options = _.extend(self.defaults, { 
-        // Chart Defaults
-    }, options || {});
-
 	var self = new Charts.base(data, options);
+
+    options = _.extend(self.defaults, (options || {}));
 
     // Declare Draw Function
 
@@ -26,7 +24,6 @@ Charts.line = function (data, options) {
             self.x.domain(extent);
 
         } else { 
-
             self.x = d3.scale.ordinal()
                 .rangePoints([0, self.width], .1)
                 .domain(self.data.map(function (d) { return self.access(self.options.axis.x.label, d); }));
@@ -34,7 +31,9 @@ Charts.line = function (data, options) {
 
         self.y = d3.scale.linear()
             .rangeRound([self.height, 0])
-            .domain([0, d3.max(self.data, function(d) { return d.total; })]);
+            .domain([0, d3.max(self.options.stack, function(d) { 
+                return d3.max(self.data, function (e) { return self.access(d.key, e); }); 
+            })]);
     }
 
 
@@ -50,7 +49,7 @@ Charts.line = function (data, options) {
                     .x(function(d) {
                         return self.x(self.access(self.options.axis.x.label, d));
                     }).y(function(d) {
-                        return self.y(self.access(stack.key, d.label));
+                        return self.y(self.access(stack.key, d));
                     });
 
                 if (!self.options.timerseries) {
@@ -72,7 +71,7 @@ Charts.line = function (data, options) {
                   .data(self.data)
                   .enter().append("circle")
                   .attr("cx", function (d) { return self.x(self.access(self.options.axis.x.label, d)); })
-                  .attr("cy", function (d) { return self.y(self.access(stack.key, d.label)); })
+                  .attr("cy", function (d) { console.log(self.access(stack.key, d)); return self.y(self.access(stack.key, d)); })
                   .attr('r', 3)
                   .style('fill', '#666')
                   .style('pointer-events', 'none')
@@ -81,27 +80,15 @@ Charts.line = function (data, options) {
                   .data(self.data)
                   .enter().append("text")
                     .attr("x", function (d) { return self.x(self.access(self.options.axis.x.label, d)); })
-                    .attr("y", function (d) { return self.y(self.access(stack.key, d.label)); })
+                    .attr("y", function (d) { return self.y(self.access(stack.key, d)); })
                     .attr("class", "label")
                     .style("text-anchor", "left")
-                    .text(function(d, i) { return self.access(stack.label, d.label); });
+                    .text(function(d, i) { return self.access(stack.label, d); });
 
                 markers.push(marker[0]);
             });
         }
 	}
-
-
-
-    self.create = function () {
-        self.setup();
-        self.process();
-
-        self.coords();
-        self.draw();
-        self.axis();
-        self.legend();
-    }
 
 
 
