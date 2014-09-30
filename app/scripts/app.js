@@ -8,6 +8,15 @@
  *
  * Main module of the application.
  */
+
+
+// set up the _analyticsAppConfig, unless it already exists
+if (!_charticusAppConfig) {
+    var _charticusAppConfig = {};
+}
+
+_charticusAppConfig.templatePath = _charticusAppConfig.templatePath || 'http://static.socialight.io/public/libs/charticus/@@charticusAppVersion/views/'; 
+
 angular
   .module('chartsApp', [
     'ngAnimate',
@@ -17,17 +26,24 @@ angular
     'ngSanitize',
     'ngTouch'
   ])
-  .config(function ($routeProvider) {
+  .config(function ($routeProvider, $sceDelegateProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
+        templateUrl: _charticusAppConfig.templatePath + 'main.html',
         controller: 'MainCtrl'
       })
       .when('/about', {
-        templateUrl: 'views/about.html',
+        templateUrl: _charticusAppConfig.templatePath + 'about.html',
         controller: 'AboutCtrl'
       })
       .otherwise({
         redirectTo: '/'
       });
+
+      $sceDelegateProvider.resourceUrlWhitelist([
+          // Allow same origin resource loads.
+          'self',
+          // Allow loading from our assets domain.
+          'http://static.socialight.io/public/libs/**'
+      ]);
   });

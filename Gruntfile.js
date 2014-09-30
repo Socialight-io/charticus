@@ -15,11 +15,16 @@ module.exports = function (grunt) {
   // Time how long tasks take. Can help when optimizing build times
   require('time-grunt')(grunt);
 
-  // Configurable paths for the application
-  var appConfig = {
-    app: require('./bower.json').appPath || 'app',
-    dist: 'dist'
-  };
+  // grunt replace
+  grunt.loadNpmTasks('grunt-include-replace');
+
+    // Configurable paths for the application
+    var bower = require('./bower.json');
+    var appConfig = {
+        app: bower.appPath || 'app',
+        version: bower.version || '0.0.0',
+        dist: 'dist'
+    };
 
   // Define the configuration for all the tasks
   grunt.initConfig({
@@ -162,9 +167,6 @@ module.exports = function (grunt) {
 
     // Automatically inject Bower components into the app
     wiredep: {
-      options: {
-        cwd: '<%= yeoman.app %>'
-      },
       app: {
         src: ['<%= yeoman.app %>/index.html'],
         ignorePath:  /\.\.\//
@@ -243,6 +245,21 @@ module.exports = function (grunt) {
         assetsDirs: ['<%= yeoman.dist %>','<%= yeoman.dist %>/images']
       }
     },
+
+
+    // insert the app version number in the templateURL
+    includereplace: {
+        dist: {
+            options: {
+                globals: {
+                    charticusAppVersion: '<%= yeoman.version %>'
+                }
+            },
+            src: '<%= yeoman.dist %>/{,*/}*.js',
+            dest: './'
+        }
+    },
+
 
     // The following *-min tasks will produce minified files in the dist folder
     // By default, your `index.html`'s <!-- Usemin block --> will take care of
@@ -433,7 +450,8 @@ module.exports = function (grunt) {
     'uglify',
     // 'filerev',
     'usemin',
-    'htmlmin'
+    'htmlmin',
+    'includereplace'
   ]);
 
   grunt.registerTask('default', [

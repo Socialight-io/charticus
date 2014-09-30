@@ -71,7 +71,7 @@ Charts.line = function (data, options) {
                   .data(self.data)
                   .enter().append("circle")
                   .attr("cx", function (d) { return self.x(self.access(self.options.axis.x.label, d)); })
-                  .attr("cy", function (d) { console.log(self.access(stack.key, d)); return self.y(self.access(stack.key, d)); })
+                  .attr("cy", function (d) { return self.y(self.access(stack.key, d)); })
                   .attr('r', 3)
                   .style('fill', '#666')
                   .style('pointer-events', 'none')

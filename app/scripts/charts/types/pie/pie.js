@@ -40,7 +40,7 @@ Charts.pie = function (data, options) {
             .attr("dy", ".35em")
             .attr("class", "label")
             .style("text-anchor", "middle")
-            .text(function(d) { console.log(self.access(self.options.stack[0].label, d)); return self.access(self.options.stack[0].label, d); });
+            .text(function(d) { return self.access(self.options.stack[0].label, d); });
 
 	}
 
