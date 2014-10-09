@@ -24,7 +24,7 @@ var Charts = new function () {
 			}
 		}
 
-	        // Allow for advanced sorting using accessors
+	    // Allow for advanced sorting using accessors
 
 	    self.sort = function () { 
 	        if (self.options.sort && typeof(self.options.sort) == "function") {
@@ -75,7 +75,7 @@ var Charts = new function () {
 	                .attr("width", 18)
 	                .attr("height", 18)
 	                .style("fill", function(d) {
-	                    return self.access(d.color, d);
+	                    return self.access("color", d);
 	                });
 
 	            legend.append("text")
@@ -92,16 +92,18 @@ var Charts = new function () {
 		self.axis = function () {
 
 	        self.yAxis = d3.svg.axis()
-	            .scale(self.y)
-	            .orient("left");
+			    .scale(self.y)
+			    .tickSize(self.width)
+			    .ticks(5)
+			    .orient("right");
 
 	        self.xAxis = d3.svg.axis()
 	            .scale(self.x)
 	            .orient("bottom")
-	            // .tickFormat(d3.format(".2s"));
+	            .tickSize(10);
 
 	        if (self.options.axis.x.show) {
-	            self.svg.append("g")
+	           var xaxis = self.svg.append("g")
 	                .attr("class", "x axis")
 	                .attr("transform", "translate(0," + self.height + ")")
 	                .call(self.xAxis);
@@ -110,12 +112,11 @@ var Charts = new function () {
 	        if (self.options.axis.y.show) {
 	            var yaxis = self.svg.append("g")
 	                .attr("class", "y axis")
-	                .call(self.yAxis)
-	                .append("text")
-	                .attr("transform", "rotate(-90)")
-	                .attr("y", 6)
-	                .attr("dy", ".71em")
-	                .style("text-anchor", "end");
+	                .call(self.yAxis);
+
+	            yaxis.selectAll("text")
+	            	.attr("x", 4)
+	            	.attr("dy", -4);
 	        }
 		}
 
@@ -157,13 +158,25 @@ var Charts = new function () {
 	        self.offset();
 
 	        self.coords();
-	        self.axis();
-	        self.legend();
 
 			return self.element;
 		}
 
+			$(".label-segment").mouseout(function (d) { // $(".lab").remove(); 
+		});
+
 		self.events = function () { 
+
+			var tip = d3.tip()
+				.attr('class', 'd3-tip')
+				.html(function(d) { console.log(d); return d.label || d.data.label; });
+
+			self.svg.call(tip);
+
+			self.svg.selectAll(".labelled")
+				.on("mouseover", tip.show)
+				.on("mouseout", tip.hide);
+
 			self.options.stack.forEach(function (stack, i) { 
 				if (stack.click) { 
 					self.svg.selectAll(".stack-"+i).on("click", stack.click);
@@ -185,12 +198,19 @@ var Charts = new function () {
 	    self.resize = function () { 
 	        self.setup(true);
 	        self.draw();
+	        self.axis();
+	        self.legend();
 	    }
 
 	    self.create = function () {
 	        self.setup();
 	        self.draw();
+	        self.axis();
+	        self.legend();
 	        self.events();
+	        $('.labelled').tooltip({
+	        	trigger: "hover"
+	        });
 	    }
 
 		self.defaults = {
@@ -200,7 +220,7 @@ var Charts = new function () {
 	        margin: {
 	            top: 20,
 	            right: 20,
-	            bottom: 20,
+	            bottom: 30,
 	            left: 20
 	        },
 	        label: "",

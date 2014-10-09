@@ -74,7 +74,7 @@ Charts.column = function (data, options) {
                         data: d,
                         label: self.access(s.label, d),
                         key: self.access(s.key, d),
-                        color: self.access(s.color, d),
+                        color: s["color"],
                         y0: y0
                     };
                     
@@ -92,8 +92,8 @@ Charts.column = function (data, options) {
             .style("fill-opacity", 1e-6);
 
         segment.enter().append("g")
-            .attr("class", function (d, i) { return "segment stack-"+i; })
-            .attr("data-label", function (d) { return d.label; })
+            .attr("class", function (d, i) { return "segment labelled stack-"+i; })
+            .attr("title", function (d) { return d.label; })
             .style("fill-opacity", 1e-6)
             .transition()
             .duration(750)
@@ -115,10 +115,9 @@ Charts.column = function (data, options) {
             .attr("y", function(d) {
                 return self.y(d.y1);
             })
-            .style("fill", function(d) {
-                return d.color;
+            .style("fill", function (d) { 
+                return self.access("color", d); 
             });
-
 	}
 
     if (self.options.create == true) { 

@@ -29,32 +29,74 @@ Charts.line = function (data, options) {
                 .domain(self.data.map(function (d) { return self.access(self.options.axis.x.label, d); }));
         }
 
+        var ymax = d3.max(self.options.stack, function(d) { 
+                return d3.max(self.data, function (e) { return self.access(d.key, e); }); 
+            });
+
         self.y = d3.scale.linear()
             .rangeRound([self.height, 0])
-            .domain([0, d3.max(self.options.stack, function(d) { 
-                return d3.max(self.data, function (e) { return self.access(d.key, e); }); 
-            })]);
+            .domain([0 - (ymax * .05), ymax]);
     }
 
 
 
 	self.draw = function () { 
 
+        self.svg.attr("class", "chart line");
+
         if (self.options && self.options.stack) {
 
             var markers = [];
             self.options.stack.forEach(function(stack, i) {
 
+                var lineData = self.data.map(function (d) { 
+                    return {
+                        x: self.access(self.options.axis.x.label, d),
+                        y: self.access(stack.key, d),
+                        label: self.access(stack.label, d)
+                    }
+                });
+
                self.line = d3.svg.line().interpolate(self.options.interpolate || "cardinal")
                     .x(function(d) {
-                        return self.x(self.access(self.options.axis.x.label, d));
+                        return self.x(d.x);
                     }).y(function(d) {
-                        return self.y(self.access(stack.key, d));
+                        return self.y(d.y);
                     });
 
-                if (!self.options.timerseries) {
-                    var vx = self.x(self.access(self.options.axis.x.label, self.data[1]))/2
-                } else { var vx = 0; }
+                if (!self.options.timeseries) {
+                    var vx = self.x(self.access(self.options.axis.x.label, self.data[1]))/2;
+                } else { 
+
+                    var extent = d3.extent(data, function(d) {
+                       return self.access(self.options.axis.x.label, d);
+                    });
+
+                    var range = d3.time.day.range(extent[0], extent[1]);
+
+                    range.forEach(function (e) { 
+                        var d = range[d];
+                        var n = 0; 
+                        lineData.forEach(function (d) { 
+                            if (d.x.toISOString().substr(0, 10) == e.toISOString().substr(0, 10)) { 
+                                n++;
+                            }
+                        }); 
+                        if (n == 0) { 
+                            lineData.push({
+                                x: new Date(e.toISOString().substr(0, 10)),
+                                y: 0,
+                                label: null
+                            });
+                        }
+                    });
+
+                    lineData = lineData.sort(function (d, e) { 
+                        return d.x - e.x;
+                    });
+
+                    var vx = 0;  
+                }
 
                 var g = self.svg.append("g")
                     .attr("class", "line-obj");
@@ -62,28 +104,23 @@ Charts.line = function (data, options) {
                 var line = g.append("path")
                     // .attr("transform", "translate(" + vx + ", 0)")
                     .attr("class", "line")
-                    .attr("d", self.line(self.data))
-                    .style("fill", "none")
-                    .style("stroke", stack.color)
-                    .style("stroke-width", 1);
+                    .attr("d", self.line(lineData))
+                    .style("stroke", self.access("color", stack))
+                    .style("fill", self.access("color", stack))
 
-                var marker = g.selectAll('circle')
-                  .data(self.data)
-                  .enter().append("circle")
-                  .attr("cx", function (d) { return self.x(self.access(self.options.axis.x.label, d)); })
-                  .attr("cy", function (d) { console.log(self.access(stack.key, d)); return self.y(self.access(stack.key, d)); })
-                  .attr('r', 3)
-                  .style('fill', '#666')
-                  .style('pointer-events', 'none')
 
-                // var label = g.selectAll('text')
-                //   .data(self.data)
-                //   .enter().append("text")
-                //     .attr("x", function (d) { return self.x(self.access(self.options.axis.x.label, d)); })
-                //     .attr("y", function (d) { return self.y(self.access(stack.key, d)); })
-                //     .attr("class", "label")
-                //     .style("text-anchor", "left")
-                //     .text(function(d, i) { return self.access(stack.label, d); });
+                var marker = g.selectAll('.marker')
+                  .data(lineData)
+                  .enter().append("g")
+                  .attr("class", "marker")
+
+                    marker.append("circle")
+                      .attr("cx", function (d) { return self.x(d.x); })
+                      .attr("cy", function (d) { return self.y(d.y); })
+                      .attr('r', 6)
+                      .style('fill', self.access("color", stack))
+                      .attr("class", "labelled")
+                      .attr("title", function(d, i) { return d.label; });
 
                 markers.push(marker[0]);
             });
