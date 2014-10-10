@@ -115,7 +115,7 @@ Charts.bar = function (data, options) {
                 return self.x(d.y0);
             })
             .style("fill", function(d) {
-                return d.color;
+                return d.color; 
             });
 
         var label = segment.append("g")

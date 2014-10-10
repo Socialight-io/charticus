@@ -12,7 +12,7 @@ Charts.pie = function (data, options) {
 
 	self.draw = function () { 
 
-        self.setup();
+        self.svg.attr("class", "pie chart");
 
         var radius = Math.min(self.width, self.height) / 2;
 
@@ -37,15 +37,8 @@ Charts.pie = function (data, options) {
         g.append("path")
             .attr("d", arc)
             .attr("class", "labelled")
-            .style("fill", function(d, i) { return color(i); })
+            .style("fill", function(d) { return self.access(self.options.stack[0].color, d); })
             .attr("title", function(d) { return self.access(self.options.stack[0].label, d); });
-
-        // g.append("text")
-        //     .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")"; })
-        //     .attr("dy", ".35em")
-        //     .attr("class", "label")
-        //     .style("text-anchor", "middle")
-        //     .text();
 
 	}
 

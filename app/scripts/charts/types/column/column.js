@@ -30,30 +30,34 @@ Charts.column = function (data, options) {
                 .domain(self.data.map(function (d) { return self.access(self.options.axis.x.label, d); }));
         }
 
+        var ymax = d3.max(self.data, function(d) { 
+           var y0 = 0;
+           self.options.stack.forEach(function (s) { 
+
+                var m = d;
+                m.label = self.access(s.label, d);
+                m.key = self.access(s.key, d);
+                m.color = self.access(s.color, d);
+
+                m.y0 = y0;
+                m.y1 = y0 + m.key;
+
+                y0 = m.y1;
+
+                return y0;
+            });
+           return y0;
+        });
+
         self.y = d3.scale.linear()
             .rangeRound([self.height, 0])
-            .domain([0, d3.max(self.data, function(d) { 
-               var y0 = 0;
-               self.options.stack.forEach(function (s) { 
-
-                    var m = d;
-                    m.label = self.access(s.label, d);
-                    m.key = self.access(s.key, d);
-                    m.color = self.access(s.color, d);
-
-                    m.y0 = y0;
-                    m.y1 = y0 + m.key;
-
-                    y0 = m.y1;
-
-                    return y0;
-                });
-               return y0;
-            })]);
+            .domain([0, ymax]);
     }
 
 	self.draw = function () { 
 
+        self.svg.attr("class", "column chart");
+        
         var bar = self.svg.selectAll(".bar")
             .data(self.data)
             .enter().append("g")
@@ -74,7 +78,7 @@ Charts.column = function (data, options) {
                         data: d,
                         label: self.access(s.label, d),
                         key: self.access(s.key, d),
-                        color: s["color"],
+                        color: self.access(s.color, d),
                         y0: y0
                     };
                     

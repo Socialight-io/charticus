@@ -1,7 +1,10 @@
 .chart { 
 	.x.axis { 
 		.tick { 
-			stroke: black;
+			line { 
+				stroke: black;
+				fill: none;
+			}
 		}
 		.domain { 
 			stroke-width: 1px;
@@ -15,9 +18,11 @@
 			display: none;
 		}
 		.tick { 
-			stroke: rgba(0,0,0,.5);
-			stroke-dasharray: 5,5;
-			stroke-width: 1px;
+			line { 
+				stroke: rgba(0,0,0,.5);
+				stroke-dasharray: 5,5;
+				stroke-width: 1px;
+			}
 		}
 	}
 }
@@ -47,6 +52,14 @@
 	.marker circle { 
 		stroke-width: 3px;
 		stroke: white;
+	}
+}
+
+.column.chart { 
+	.y.axis { 
+		.tick:first-child { 
+			display: none;
+		}
 	}
 }
 

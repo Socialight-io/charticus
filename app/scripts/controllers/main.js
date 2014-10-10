@@ -33,19 +33,19 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		        stack: [{
 		            key: "count",
 		            label: function (d) { return d.count + " Posts"; },
-		            color: "#006699",
-		            legend: "Posts"
+		            color: function (d) { return "#006699" },
+		            legend: function (d) { return "Posts"; }
 		        },
 		         {
 		            key: "likes",
 		            label: function (d) { return d.likes + " Likes"; },
-		            color: "#996600",
-		            legend: "Likes"
+		            color: function (d) { return "#0099CC"; },
+		            legend: function (d) { return "Likes"; }
 		        }], 
 		        axis: {
 		            x: {
 		                show: true,
-		                extent: [new Date("2014-09-08"), new Date("2014-10-08")],
+		                extent: [new Date("2014-09-08"), new Date()],
 		                label: function (d) {
 		                	return new Date(d.date.substr(0,10)); 
 		               	}
@@ -67,7 +67,7 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		        stack: [{
 		            key: function (d) { return d.count || 0; },
 		            label: function (d) { return d.data.count + " Posts"; },
-		            color: "#006699",
+		            color: function (d) { return "rgba(255,100,0,"+Math.random()+")" },
 		            legend: "Posts"
 		        }],
 		        axis: {
@@ -94,7 +94,7 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		        stack: [{
 		            key: function (d) { return d.count || 0; },
 		            label: function (d) { return d.data.count + " Posts"; },
-		            color: "#006699",
+		            color: function (d) { return "#006699"; },
 		            legend: "Posts"
 		        }],
 		        axis: {
@@ -121,7 +121,7 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		        stack: [{
 		            key: function (d) { return d.count || 0; },
 		            label: function (d) { return d.data.count + " Posts"; },
-		            color: "#006699",
+		            color: function (d) { return "#006699" },
 		            legend: "Posts"
 		        }],
 		        axis: {
@@ -149,17 +149,17 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		        stack: [{
 		            key: "count",
 		            label: function (d) { return d.count + " Posts"; },
-		            color: "#006699",
+		            color: function (d) { return "#006699" },
 		            legend: "Posts"
 		        }, {
 		            key: "likes",
 		            label: function (d) { return d.likes + " Likes"; },
-		            color: "#996600",
+		            color: function (d) { return "#996600" },
 		            legend: "Comments"
 		        }, {
 		            key: "comments",
 		            label: function (d) { return d.comments + " Comments"; },
-		            color: "#FF0099",
+		            color: function (d) { return "#FF0099" },
 		           	legend: "Likes"
 		        }],
 		        axis: {

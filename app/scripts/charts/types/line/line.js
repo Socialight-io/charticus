@@ -105,8 +105,8 @@ Charts.line = function (data, options) {
                     // .attr("transform", "translate(" + vx + ", 0)")
                     .attr("class", "line")
                     .attr("d", self.line(lineData))
-                    .style("stroke", self.access("color", stack))
-                    .style("fill", self.access("color", stack))
+                    .style("stroke", function (d) { return self.access(stack.color, d); })
+                    .style("fill", function (d) { return self.access(stack.color, d); });
 
 
                 var marker = g.selectAll('.marker')
@@ -118,7 +118,7 @@ Charts.line = function (data, options) {
                       .attr("cx", function (d) { return self.x(d.x); })
                       .attr("cy", function (d) { return self.y(d.y); })
                       .attr('r', 6)
-                      .style('fill', self.access("color", stack))
+                      .style('fill', function (d) { return self.access(stack.color, d); })
                       .attr("class", "labelled")
                       .attr("title", function(d, i) { return d.label; });
 

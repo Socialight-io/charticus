@@ -75,7 +75,7 @@ var Charts = new function () {
 	                .attr("width", 18)
 	                .attr("height", 18)
 	                .style("fill", function(d) {
-	                    return self.access("color", d);
+	                    return self.access(d.color, d);
 	                });
 
 	            legend.append("text")
@@ -84,7 +84,7 @@ var Charts = new function () {
 	                .attr("dy", ".35em")
 	                .style("text-anchor", "end")
 	                .text(function(d) {
-	                    return d.legend;
+	                    return self.access(d.legend, d);
 	                });
 	        }
 		}
@@ -169,7 +169,7 @@ var Charts = new function () {
 
 			var tip = d3.tip()
 				.attr('class', 'd3-tip')
-				.html(function(d) { console.log(d); return d.label || d.data.label; });
+				.html(function(d) { return d.label || d.data.label; });
 
 			self.svg.call(tip);
 
