@@ -119,6 +119,7 @@ Charts.line = function (data, options) {
                       .attr("cy", function (d) { return self.y(d.y); })
                       .attr('r', 6)
                       .style('fill', function (d) { return self.access(stack.color, d); })
+                      .style('stroke', function (d) { return self.access(stack.color, d); })
                       .attr("class", "labelled")
                       .attr("title", function(d, i) { return d.label; });
 

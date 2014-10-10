@@ -1,6 +1,6 @@
 {
   "name": "charticus",
-  "version": "0.1.2",
+  "version": "0.2.2",
   "main": [
     "dist/scripts/charts.js",
     "dist/styles/charts.css"
