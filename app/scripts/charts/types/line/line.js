@@ -123,7 +123,7 @@ Charts.line = function (data, options) {
                     marker.append("circle")
                       .attr("cx", function (d) { return self.x(d.x); })
                       .attr("cy", function (d) { return self.y(d.y); })
-                      .attr('r', function (d) { self.access(stack.marker, d) || 4; })
+                      .attr('r', function (d) { return self.access(stack.marker, d) || 4; })
                       .style('fill', function (d) { return self.access(stack.color, d); })
                       .style('stroke', function (d) { return self.access(stack.color, d); })
                       .attr("class", "labelled")
