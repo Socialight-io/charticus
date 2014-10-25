@@ -68,28 +68,34 @@ Charts.line = function (data, options) {
                     var vx = self.x(self.access(self.options.axis.x.label, self.data[1]))/2;
                 } else { 
 
-                    var extent = d3.extent(data, function(d) {
-                       return self.access(self.options.axis.x.label, d);
-                    });
+                    if (self.options.axis.x.extent) { 
+                        var extent = self.options.axis.x.extent;
+                    } else { 
+                        var extent = d3.extent(data, function(d) {
+                           return self.access(self.options.axis.x.label, d);
+                        });
+                    }
 
                     var range = d3.time.day.range(extent[0], extent[1]);
 
-                    range.forEach(function (e) { 
-                        var d = range[d];
-                        var n = 0; 
-                        lineData.forEach(function (d) { 
-                            if (d.x.toISOString().substr(0, 10) == e.toISOString().substr(0, 10)) { 
-                                n++;
+                    if (self.options.axis.x.fill == true) { 
+                        range.forEach(function (e) { 
+                            var d = range[d];
+                            var n = 0; 
+                            lineData.forEach(function (d) { 
+                                if (d.x.toISOString().substr(0, 10) == e.toISOString().substr(0, 10)) { 
+                                    n++;
+                                }
+                            }); 
+                            if (n == 0) { 
+                                lineData.push({
+                                    x: new Date(e.toISOString().substr(0, 10)),
+                                    y: 0,
+                                    label: null
+                                });
                             }
-                        }); 
-                        if (n == 0) { 
-                            lineData.push({
-                                x: new Date(e.toISOString().substr(0, 10)),
-                                y: 0,
-                                label: null
-                            });
-                        }
-                    });
+                        });
+                    }
 
                     lineData = lineData.sort(function (d, e) { 
                         return d.x - e.x;
