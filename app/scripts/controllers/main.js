@@ -37,6 +37,7 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 		            legend: function (d) { return "Posts"; }
 		        },
 		         {
+		         	marker: function (d) { return 10; },
 		            key: "likes",
 		            label: function (d) { return d.likes + " Likes"; },
 		            color: function (d) { return "#0099CC"; },
