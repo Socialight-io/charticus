@@ -52,6 +52,12 @@
 	.marker circle { 
 		stroke-width: 5px;
 	}
+
+	.area { 
+		fill-opacity: .5;
+		stroke: transparent;
+		stroke-width: 0;
+	}
 }
 
 .column.chart { 

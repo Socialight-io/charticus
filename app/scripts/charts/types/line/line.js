@@ -57,12 +57,27 @@ Charts.line = function (data, options) {
                     }
                 });
 
-               self.line = d3.svg.line().interpolate(self.options.interpolate || "cardinal")
-                    .x(function(d) {
-                        return self.x(d.x);
-                    }).y(function(d) {
-                        return self.y(d.y);
-                    });
+                if (self.options.area) { 
+                   self.line = d3.svg.area().interpolate(self.options.interpolate || "cardinal")
+                        .x(function(d) {
+                            return self.x(d.x);
+                        })
+                        .y0(self.options.height - self.options.margin.bottom - self.options.margin.top)
+                        .y1(function(d) {
+                            return self.y(d.y);
+                        });
+                   var lineClass = "area";
+                } else { 
+                   self.line = d3.svg.line().interpolate(self.options.interpolate || "cardinal")
+                        .x(function(d) {
+                            return self.x(d.x);
+                        })
+                        .y(function(d) {
+                            return self.y(d.y);
+                        });
+
+                   var lineClass = "line";
+                }
 
                 if (!self.options.timeseries) {
                     var vx = self.x(self.access(self.options.axis.x.label, self.data[1]))/2;
@@ -109,16 +124,17 @@ Charts.line = function (data, options) {
 
                 var line = g.append("path")
                     // .attr("transform", "translate(" + vx + ", 0)")
-                    .attr("class", "line")
+                    .attr("class", lineClass)
                     .attr("d", self.line(lineData))
                     .style("stroke", function (d) { return self.access(stack.color, d); })
                     .style("fill", function (d) { return self.access(stack.color, d); });
 
 
-                var marker = g.selectAll('.marker')
-                  .data(lineData)
-                  .enter().append("g")
-                  .attr("class", "marker")
+                if (self.options.marker) { 
+                    var marker = g.selectAll('.marker')
+                      .data(lineData)
+                      .enter().append("g")
+                      .attr("class", "marker")
 
                     marker.append("circle")
                       .attr("cx", function (d) { return self.x(d.x); })
@@ -129,7 +145,8 @@ Charts.line = function (data, options) {
                       .attr("class", "labelled")
                       .attr("title", function(d, i) { return d.label; });
 
-                markers.push(marker[0]);
+                    markers.push(marker[0]);
+                }
             });
         }
 	}

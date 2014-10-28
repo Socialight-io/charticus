@@ -28,8 +28,9 @@ angular.module('chartsApp').controller('MainCtrl', ['$scope', '$http', function(
 				create: true,
 				timeseries: true,
 				legend: true,
+				area: false,
 				height: 400,
-				interpolate: "linear",
+				// interpolate: "linear",
 		        stack: [{
 		            key: "count",
 		            label: function (d) { return d.count + " Posts"; },
