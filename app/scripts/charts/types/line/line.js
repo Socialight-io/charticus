@@ -62,7 +62,7 @@ Charts.line = function (data, options) {
                         .x(function(d) {
                             return self.x(d.x);
                         })
-                        .y0(self.options.height - self.options.margin.bottom - self.options.margin.top)
+                        .y0(self.options.height)
                         .y1(function(d) {
                             return self.y(d.y);
                         });
